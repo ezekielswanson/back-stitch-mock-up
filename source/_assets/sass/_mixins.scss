@@ -1,0 +1,136 @@
+/*=============================================>>>>>
+= MIXINS  =
+===============================================>>>>>*/
+
+$tablet: 768px;
+$desktop: 1024px;
+$desktop-large: 1280px;
+$huge: 1400px;
+$hugest: 1920px;
+
+@mixin tablet {
+  @media (min-width: #{$tablet}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop}) {
+    @content;
+  }
+}
+
+@mixin desktop-large {
+  @media (min-width: #{$desktop-large}) {
+    @content;
+  }
+}
+
+@mixin huge {
+  @media (min-width: #{$huge}) {
+    @content;
+  }
+}
+
+@mixin hugest {
+  @media (min-width: #{$hugest}) {
+    @content;
+  }
+}
+
+@mixin custom($screen) {
+   @media (max-width: $screen+'px') {
+       @content;
+   }
+}
+
+
+@mixin linear-gradient($direction, $colors...) {
+  // Direction has been omitted and happens to be a color-stop
+  @if is-direction($direction) == false {
+    $colors: $direction, $colors;
+    $direction: 180deg;
+  }
+
+  background: nth(nth($colors, 1), 1);
+  background: linear-gradient($direction, $colors);
+}
+
+
+@mixin flex($align: flex-start, $justify: flex-start, $direction: row){
+  display:flex;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+}
+@mixin flex-display {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+@mixin flex-inline ($align: flex-start, $justify: flex-start, $direction: row){
+  display: inline-flex;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
+  display: -ms-inline-flexbox;
+  align-items: $align;
+  justify-content: $justify;
+  flex-direction: $direction;
+}
+
+
+// @param {Number}   $responsive  - Viewport-based size
+// @param {Number}   $min         - Minimum font size (px)
+// @param {Number}   $max         - Maximum font size (px)
+//                                  (optional)
+// @param {Number}   $fallback    - Fallback for viewport-
+//                                  based units (optional)
+//
+// @example scss - 5vw font size (with 50px fallback),
+//                  minumum of 35px and maximum of 150px
+//
+// @include responsive-font(5vw, 35px, 150px, 50px);
+
+@mixin responsive-font($responsive, $min, $max: false, $fallback: false) {
+  $responsive-unitless: $responsive / ($responsive - $responsive + 1);
+  $dimension: if(unit($responsive) == 'vh', 'height', 'width');
+  $min-breakpoint: $min / $responsive-unitless * 100;
+
+  @media (max-#{$dimension}: #{$min-breakpoint}) {
+    font-size: $min;
+  }
+
+  @if $max {
+    $max-breakpoint: $max / $responsive-unitless * 100;
+
+    @media (min-#{$dimension}: #{$max-breakpoint}) {
+      font-size: $max;
+    }
+  }
+
+  @if $fallback {
+    font-size: $fallback;
+  }
+
+  font-size: $responsive;
+}
+
+/*= End of MIXINS  =*/
+/*=============================================<<<<<*/
+
+//Slightly lighten a color
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+/// Slightly darken a color
+@function shade($color, $percentage) {
+  @return mix(black, $color, $percentage);
+}
+
